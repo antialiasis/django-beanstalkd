@@ -7,7 +7,9 @@ import traceback
 import time
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
-from django_beanstalkd import connect_beanstalkd, BeanstalkError
+from django_beanstalkd import (
+    connect_beanstalkd, BeanstalkError, RetryJobException
+)
 from beanstalkc import SocketError
 
 
@@ -138,6 +140,26 @@ class Command(NoArgsCommand):
                 logger.debug("Calling %s with arg: %s" % (job_name, job.body))
                 try:
                     self.jobs[job_name](job.body)
+                except RetryJobException as e:
+                    releases = job.stats()['releases']
+                    if hasattr(settings, 'BEANSTALK_MAX_RETRIES'):
+                        max_retries = settings.BEANSTALK_MAX_RETRIES
+                    else:
+                        max_retries = 10
+                    if releases < max_retries:
+                        job.release()
+                    else:
+                        tp, value, tb = sys.exc_info()
+                        logger.error('Max retries reached while calling "%s" '
+                            'with arg "%s": %s' % (
+                                job_name,
+                                job.body,
+                                e,
+                            )
+                        )
+                        logger.debug("%s:%s" % (tp.__name__, value))
+                        logger.debug("\n".join(traceback.format_tb(tb)))
+                        job.bury()
                 except Exception, e:
                     tp, value, tb = sys.exc_info()
                     logger.error('Error while calling "%s" with arg "%s": '

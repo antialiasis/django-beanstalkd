@@ -22,6 +22,10 @@ def connect_beanstalkd():
         raise BeanstalkError(e)
 
 
+class RetryJobException(Exception):
+    pass
+
+
 class BeanstalkError(Exception):
     pass
 
