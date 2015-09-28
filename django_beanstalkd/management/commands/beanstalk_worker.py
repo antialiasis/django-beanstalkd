@@ -145,9 +145,9 @@ class Command(NoArgsCommand):
                     if hasattr(settings, 'BEANSTALK_MAX_RETRIES'):
                         max_retries = settings.BEANSTALK_MAX_RETRIES
                     else:
-                        max_retries = 10
+                        max_retries = 3
                     if releases < max_retries:
-                        job.release()
+                        job.release(delay=100)
                     else:
                         tp, value, tb = sys.exc_info()
                         logger.error('Max retries reached while calling "%s" '
