@@ -1,68 +1,19 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+*.db
+*.pyc
+*.swp
+*.idea
+*.sqlite3
+*.DS_Store
+*.python-version
 
-#JSON file for twitter debugging
-test.py
-test.json
+build
 
-# C extensions
-*.so
+# Compiled python modules.
+*.pyc
 
-# Distribution / packaging
-.Python
-venv/
-env/
-bin/
-build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-src/
-*.egg-info/
-.installed.cfg
-*.egg
+# Setuptools distribution folder.
+/dist/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-.local_settings.py*
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
-
-# Django stuff:
-*.log
-*.pot
-
-# Sphinx documentation
-docs/_build/
-
-# Mac stuff
-.DS_Store
-
-# Local settings
-local_settings.py
-*.sublime-project
-*.sublime-workspace
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+/*.egg
