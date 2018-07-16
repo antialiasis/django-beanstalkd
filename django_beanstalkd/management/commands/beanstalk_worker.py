@@ -6,7 +6,7 @@ import sys
 import time
 import traceback
 
-from beanstalkc import SocketError
+from beanstalkc import SocketError, CommandFailed
 from django.conf import settings
 from django_beanstalkd import (
     BeanstalkError, connect_beanstalkd, RetryJobException
@@ -177,6 +177,10 @@ class Command(CompatibilityBaseCommand):
                     logger.debug('\n'.join(traceback.format_tb(tb)))
                     job.bury()
                 else:
-                    job.delete()
+                    try:
+                        job.delete()
+                    except CommandFailed as e:
+                        # This job has probably already been deleted; ignore (but warn)
+                        logger.warn('Failed to delete job: %r' % e)
             else:
                 job.release()
